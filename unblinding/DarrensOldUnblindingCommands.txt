@@ -1,0 +1,314 @@
+#########################################
+
+# rename datacards
+
+mv ttH_hbb_13TeV_sl_boosted.txt ttH_hbb_13TeV_sl_boost.txt
+mv ttH_hbb_13TeV_sl_j4_t3.txt ttH_hbb_13TeV_sl_4j3t.txt
+mv ttH_hbb_13TeV_sl_j4_t4_high.txt ttH_hbb_13TeV_sl_4j4t_high.txt
+mv ttH_hbb_13TeV_sl_j4_t4_low.txt ttH_hbb_13TeV_sl_4j4t_low.txt
+mv ttH_hbb_13TeV_sl_j5_t3.txt ttH_hbb_13TeV_sl_5j3t.txt
+mv ttH_hbb_13TeV_sl_j5_tge4_high.txt ttH_hbb_13TeV_sl_5jge4t_high.txt
+mv ttH_hbb_13TeV_sl_j5_tge4_low.txt ttH_hbb_13TeV_sl_5jge4t_low.txt
+mv ttH_hbb_13TeV_sl_jge6_t2.txt ttH_hbb_13TeV_sl_ge6j2t.txt
+mv ttH_hbb_13TeV_sl_jge6_t3.txt ttH_hbb_13TeV_sl_ge6j3t.txt
+mv ttH_hbb_13TeV_sl_jge6_tge4_high.txt ttH_hbb_13TeV_sl_ge6jge4t_high.txt
+mv ttH_hbb_13TeV_sl_jge6_tge4_low.txt ttH_hbb_13TeV_sl_ge6jge4t_low.txt
+
+
+# remove MC stats from DIL
+cp ../DESY_datacards_2March/Nominal/combined/common/ttH_hbb_13TeV_dl.root common/
+cat ../DESY_datacards_2March/Nominal/combined/ttH_hbb_13TeV_dl_3j2t.txt | grep -v BDTbin > ttH_hbb_13TeV_dl_3j2t.txt
+cat ../DESY_datacards_2March/Nominal/combined/ttH_hbb_13TeV_dl_3j3t.txt | grep -v BDTbin > ttH_hbb_13TeV_dl_3j3t.txt
+cat ../DESY_datacards_2March/Nominal/combined/ttH_hbb_13TeV_dl_ge4j2t.txt | grep -v BDTbin > ttH_hbb_13TeV_dl_ge4j2t.txt
+cat ../DESY_datacards_2March/Nominal/combined/ttH_hbb_13TeV_dl_ge4j3t.txt | grep -v BDTbin > ttH_hbb_13TeV_dl_ge4j3t.txt
+cat ../DESY_datacards_2March/Nominal/combined/ttH_hbb_13TeV_dl_ge4jge4t.txt | grep -v BDTbin > ttH_hbb_13TeV_dl_ge4jge4t.txt
+
+
+# datacard manipulations
+
+combineCards.py j3t2=ttH_hbb_13TeV_dl_3j2t.txt j3t3=ttH_hbb_13TeV_dl_3j3t.txt gej4t2=ttH_hbb_13TeV_dl_ge4j2t.txt  gej4t3=ttH_hbb_13TeV_dl_ge4j3t.txt gej4get4=ttH_hbb_13TeV_dl_ge4jge4t.txt > ttH_hbb_13TeV_dl.txt
+
+combineCards.py j4t3=ttH_hbb_13TeV_sl_4j3t.txt j4t4_high=ttH_hbb_13TeV_sl_4j4t_high.txt j4t4_low=ttH_hbb_13TeV_sl_4j4t_low.txt j5t3=ttH_hbb_13TeV_sl_5j3t.txt j5get4_high=ttH_hbb_13TeV_sl_5jge4t_high.txt j5get4_low=ttH_hbb_13TeV_sl_5jge4t_low.txt boost=ttH_hbb_13TeV_sl_boost.txt gej6t2=ttH_hbb_13TeV_sl_ge6j2t.txt gej6t3=ttH_hbb_13TeV_sl_ge6j3t.txt gej6get4_high=ttH_hbb_13TeV_sl_ge6jge4t_high.txt gej6get4_low=ttH_hbb_13TeV_sl_ge6jge4t_low.txt > ttH_hbb_13TeV_sl.txt
+
+combineCards.py dl=ttH_hbb_13TeV_dl.txt sl=ttH_hbb_13TeV_sl.txt > ttH_hbb_13TeV.txt
+
+cat ttH_hbb_13TeV.txt | grep -v BDTbin | grep -v ANNbin | grep -v kmax > ttH_hbb_13TeV_noMCstats.txt
+
+combineCards.py sl_j4t3=ttH_hbb_13TeV_sl_4j3t.txt sl_j4t4_low=ttH_hbb_13TeV_sl_4j4t_low.txt sl_j5t3=ttH_hbb_13TeV_sl_5j3t.txt sl_j5get4_low=ttH_hbb_13TeV_sl_5jge4t_low.txt sl_gej6t2=ttH_hbb_13TeV_sl_ge6j2t.txt dl_j3t2=ttH_hbb_13TeV_dl_3j2t.txt dl_j3t3=ttH_hbb_13TeV_dl_3j3t.txt dl_gej4t2=ttH_hbb_13TeV_dl_ge4j2t.txt > ttH_hbb_13TeV_lowSensitivity.txt
+
+cat ttH_hbb_13TeV_lowSensitivity.txt | grep -v BDTbin | grep -v kmax > ttH_hbb_13TeV_lowSensitivity_noMCstats.txt
+
+cat ttH_hbb_13TeV_sl.txt | grep -v BDTbin | grep -v ANNbin | grep -v kmax > ttH_hbb_13TeV_sl_noMCstats.txt
+
+
+
+combineCards.py sl_j4t3=ttH_hbb_13TeV_sl_4j3t.txt sl_j4t4_low=ttH_hbb_13TeV_sl_4j4t_low.txt sl_j5t3=ttH_hbb_13TeV_sl_5j3t.txt sl_j5get4_low=ttH_hbb_13TeV_sl_5jge4t_low.txt sl_gej6t2=ttH_hbb_13TeV_sl_ge6j2t.txt dl_j3t2=ttH_hbb_13TeV_dl_3j2t.txt dl_j3t3=ttH_hbb_13TeV_dl_3j3t.txt dl_gej4t2=ttH_hbb_13TeV_dl_ge4j2t.txt > ttH_hbb_13TeV_lowSensitivity.txt
+
+combineCards.py dl_gej4t3=ttH_hbb_13TeV_dl_ge4j3t.txt dl_gej4get4=ttH_hbb_13TeV_dl_ge4jge4t.txt sl_j4t4_high=ttH_hbb_13TeV_sl_4j4t_high.txt sl_j5get4_high=ttH_hbb_13TeV_sl_5jge4t_high.txt sl_boost=ttH_hbb_13TeV_sl_boost.txt sl_gej6t3=ttH_hbb_13TeV_sl_ge6j3t.txt sl_gej6get4_high=ttH_hbb_13TeV_sl_ge6jge4t_high.txt sl_gej6get4_low=ttH_hbb_13TeV_sl_ge6jge4t_low.txt > ttH_hbb_13TeV_highSensitivity.txt
+
+
+cat ttH_hbb_13TeV_lowSensitivity.txt | grep -v BDTbin | grep -v kmax > ttH_hbb_13TeV_lowSensitivity_noMCstats.txt
+######################################################
+ls -1 ttH*.txt | awk '{ print "combine -M Asymptotic --minosAlgo stepping -m 125 --run=\"blind\" " $1 " -n _blind_" $1 " >&! out_Asymptotic_blind_" $1 ".log &" }' | awk '{ gsub(".txt","",$11); print }'
+
+ls -1 ttH*dl*.txt | awk '{ print "combine -M Asymptotic --minosAlgo stepping -m 125 --run=\"blind\" " $1 " -n _blind_" $1 " >&! out_Asymptotic_blind_" $1 ".log &" }' | awk '{ gsub(".txt","",$11); print }'
+
+ls -1 ttH*.txt | awk '{ print "combine -M Asymptotic --minosAlgo stepping -m 125 " $1 " -n _" $1 " >&! out_Asymptotic_" $1 ".log &" }' | awk '{ gsub(".txt","",$11); print }'
+
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_sl_noMCstats.txt -n _ttH_hbb_13TeV_sl_noMCstats_expectSignal1 --expectSignal=1 -t -1 >&! out_MaxLikelihoodFit_ttH_hbb_13TeV_sl_noMCstats_expectSignal1.log &
+
+
+python diffNuisances_asymErrors.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_asymErrors_ttH_hbb_13TeV_sl_noMCstats_expectSignal1.root mlfit_ttH_hbb_13TeV_sl_noMCstats_expectSignal1.root >&! out_diffNuisances_asymErrors_ttH_hbb_13TeV_sl_noMCstats_expectSignal1.log &
+
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_noMCstats.txt -n _ttH_hbb_13TeV_noMCstats_expectSignal1 --expectSignal=1 -t -1 > & ! out_MaxLikelihoodFit_ttH_hbb_13TeV_noMCstats_expectSignal1.log &
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_noMCstats_expectSignal1.root mlfit_ttH_hbb_13TeV_noMCstats_expectSignal1.root >&! out_diffNuisances_ttH_hbb_13TeV_noMCstats_expectSignal1.log &
+
+
+######################################################
+
+### UNBLINDING
+
+1) Unblind nuisance pulls in b-only fit for low-sensitivity categories
+
+
+combine -M MultiDimFit --algo grid --points 50 --rMin -5 --rMax 5 -P r --saveInactivePOI 1 --floatOtherPOI 1 ttH_hbb_13TeV_lowSensitivity_noMCstats.txt -n _ttH_hbb_13TeV_lowSensitivity_noMCstats
+
+combine -M MultiDimFit --algo grid --points 50 --rMin -6 --rMax 5 -P r --saveInactivePOI 1 --floatOtherPOI 1 ttH_hbb_13TeV.txt -n _ttH_hbb_13TeV >&! out_MultiDimFit_grid_r_ttH_hbb_13TeV.log &
+
+
+
+# unblind fit
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_lowSensitivity.txt -n _ttH_hbb_13TeV_lowSensitivity > /dev/null
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_lowSensitivity_noMCstats.txt -n _ttH_hbb_13TeV_lowSensitivity_noMCstats > /dev/null
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_lowSensitivity_noMCstats.txt -n _ttH_hbb_13TeV_lowSensitivity_noMCstats 
+
+
+python diffNuisances_bonly.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g  hist_diffNuisances_ttH_hbb_13TeV_lowSensitivity.root mlfit_ttH_hbb_13TeV_lowSensitivity.root > & ! out_diffNuisances_bonly_ttH_hbb_13TeV_lowSensitivity.log &
+
+python diffNuisances_bonly.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_lowSensitivity_noMCstats.root mlfit_ttH_hbb_13TeV_lowSensitivity_noMCstats.root > & ! out_diffNuisances_bonly_ttH_hbb_13TeV_lowSensitivity_noMCstats.log &
+REDACTED
+
+root -l hist_diffNuisances_ttH_hbb_13TeV_lowSensitivity_noMCstats.root
+nuisancs->Draw();
+
+
+
+######################################################
+
+2) Unblind limits and nuisance pulls for low-sensitivity categories
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_4j3t.txt -n _ttH_hbb_13TeV_sl_4j3t >&! out_Asymptotic_ttH_hbb_13TeV_sl_4j3t.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_4j4t_low.txt -n _ttH_hbb_13TeV_sl_4j4t_low >&! out_Asymptotic_ttH_hbb_13TeV_sl_4j4t_low.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_5j3t.txt -n _ttH_hbb_13TeV_sl_5j3t >&! out_Asymptotic_ttH_hbb_13TeV_sl_5j3t.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_5jge4t_low.txt -n _ttH_hbb_13TeV_sl_5jge4t_low >&! out_Asymptotic_ttH_hbb_13TeV_sl_5jge4t_low.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_ge6j2t.txt -n _ttH_hbb_13TeV_sl_ge6j2t >&! out_Asymptotic_ttH_hbb_13TeV_sl_ge6j2t.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_3j2t.txt -n _ttH_hbb_13TeV_dl_3j2t >&! out_Asymptotic_ttH_hbb_13TeV_dl_3j2t.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_3j3t.txt -n _ttH_hbb_13TeV_dl_3j3t >&! out_Asymptotic_ttH_hbb_13TeV_dl_3j3t.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_ge4j2t.txt -n _ttH_hbb_13TeV_dl_ge4j2t >&! out_Asymptotic_ttH_hbb_13TeV_dl_ge4j2t.log &
+REDACTED
+
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_lowSensitivity.txt -n _ttH_hbb_13TeV_lowSensitivity >&! out_Asymptotic_ttH_hbb_13TeV_lowSensitivity.log &
+REDACTED
+
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_highSensitivity.txt -n _ttH_hbb_13TeV_highSensitivity >&! out_Asymptotic_ttH_hbb_13TeV_highSensitivity.log &
+
+combine -M Asymptotic --minosAlgo stepping -m 125 --run="blind" ttH_hbb_13TeV_highSensitivity.txt -n _ttH_hbb_13TeV_highSensitivity_blind >&! out_Asymptotic_blind_ttH_hbb_13TeV_highSensitivity.log &
+REDACTED
+combine -M Asymptotic --minosAlgo stepping -m 125 --run="blind" ttH_hbb_13TeV_lowSensitivity.txt -n _ttH_hbb_13TeV_lowSensitivity_blind >&! out_Asymptotic_blind_ttH_hbb_13TeV_lowSensitivity.log &
+REDACTED
+
+combine -M Asymptotic --minosAlgo stepping -m 125 --run="blind" ttH_hbb_13TeV.txt -n _ttH_hbb_13TeV_blind >&! out_Asymptotic_blind_ttH_hbb_13TeV.log &
+REDACTED
+
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_lowSensitivity.txt -n _ttH_hbb_13TeV_lowSensitivity > & ! out_MaxLikelihoodFit_ttH_hbb_13TeV_lowSensitivity.log &
+REDACTED
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_lowSensitivity_noMCstats.txt -n _ttH_hbb_13TeV_lowSensitivity_noMCstats > & ! out_MaxLikelihoodFit_ttH_hbb_13TeV_lowSensitivity_noMCstats.log &
+REDACTED
+
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_lowSensitivity.root mlfit_ttH_hbb_13TeV_lowSensitivity.root >&! out_diffNuisances_mlfit_ttH_hbb_13TeV_lowSensitivity.log &
+REDACTED
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_lowSensitivity_noMCstats.root mlfit_ttH_hbb_13TeV_lowSensitivity_noMCstats.root >&! out_diffNuisances_mlfit_ttH_hbb_13TeV_lowSensitivity_noMCstats.log REDACTED
+
+
+root -l hist_diffNuisances_ttH_hbb_13TeV_lowSensitivity_noMCstats.root
+
+
+## limit impact
+
+text2workspace.py ttH_hbb_13TeV_lowSensitivity_noMCstats.txt -o ws_ttH_hbb_13TeV_lowSensitivity_noMCstats.root &
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV_noMCstats.root -m 125 --doInitialFit --robustFit 1 --rMin -10 --rMax 10
+REDACTED
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV_lowSensitivity_noMCstats.root -m 125 --robustFit 1 --doFits --rMin -10 --rMax 10 --parallel 5
+
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV_lowSensitivity_noMCstats.root -m 125 --rMin -10 --rMax 10 -o impacts_ttH_hbb_13TeV_lowSensitivity_noMCstats.json
+
+plotImpacts.py -i impacts_ttH_hbb_13TeV_lowSensitivity_noMCstats.json -o impacts_ttH_hbb_13TeV_lowSensitivity_noMCstats
+
+
+
+######################################################
+
+3) Unblind nuisance pulls in b-only fit for all categories
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV.txt -n _ttH_hbb_13TeV > /dev/null
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_noMCstats.txt -n _ttH_hbb_13TeV_noMCstats > /dev/null
+
+
+python diffNuisances_bonly.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g  hist_diffNuisances_ttH_hbb_13TeV.root mlfit_ttH_hbb_13TeV.root > & ! out_diffNuisances_bonly_ttH_hbb_13TeV.log &
+
+python diffNuisances_bonly.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_noMCstats.root mlfit_ttH_hbb_13TeV_noMCstats.root > & ! out_diffNuisances_bonly_ttH_hbb_13TeV_noMCstats.log &
+REDACTED
+
+root -l hist_diffNuisances_ttH_hbb_13TeV_noMCstats.root
+nuisancs->Draw();
+
+
+######################################################
+
+4) Unblind pulls in s+b fit for all categories
+
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_noMCstats.root mlfit_ttH_hbb_13TeV_noMCstats.root >&! out_diffNuisances_mlfit_ttH_hbb_13TeV_noMCstats.log &
+REDACTED
+
+
+root -l hist_diffNuisances_ttH_hbb_13TeV_noMCstats.root
+nuisancs->Draw();
+
+
+
+
+######################################################
+
+5) Unblind pre-fit and post-fit discriminator plots for all categories
+
+
+PostFitShapes -d ttH_hbb_13TeV.txt -o shapes_ttH_hbb_13TeV.root -m 125 -f mlfit_ttH_hbb_13TeV.root:fit_s --postfit --sampling --print
+
+PostFitShapes -d ttH_hbb_13TeV_noMCstats.txt -o shapes_ttH_hbb_13TeV_noMCstats.root -m 125 -f mlfit_ttH_hbb_13TeV_noMCstats.root:fit_s --postfit --sampling --print
+
+root -b -q head.C makePlots_PostFitShapes_ttH_hbb_13TeV.C+'("shapes_ttH_hbb_13TeV_noMCstats.root",true)'
+
+
+######################################################
+
+6) Unblind full limits with all categories included
+
+
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV.txt -n _ttH_hbb_13TeV >&! out_Asymptotic_ttH_hbb_13TeV.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl.txt -n _ttH_hbb_13TeV_dl >&! out_Asymptotic_ttH_hbb_13TeV_dl.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_3j2t.txt -n _ttH_hbb_13TeV_dl_3j2t >&! out_Asymptotic_ttH_hbb_13TeV_dl_3j2t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_3j3t.txt -n _ttH_hbb_13TeV_dl_3j3t >&! out_Asymptotic_ttH_hbb_13TeV_dl_3j3t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_ge4j2t.txt -n _ttH_hbb_13TeV_dl_ge4j2t >&! out_Asymptotic_ttH_hbb_13TeV_dl_ge4j2t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_ge4j3t.txt -n _ttH_hbb_13TeV_dl_ge4j3t >&! out_Asymptotic_ttH_hbb_13TeV_dl_ge4j3t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_dl_ge4jge4t.txt -n _ttH_hbb_13TeV_dl_ge4jge4t >&! out_Asymptotic_ttH_hbb_13TeV_dl_ge4jge4t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl.txt -n _ttH_hbb_13TeV_sl >&! out_Asymptotic_ttH_hbb_13TeV_sl.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_4j3t.txt -n _ttH_hbb_13TeV_sl_4j3t >&! out_Asymptotic_ttH_hbb_13TeV_sl_4j3t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_4j4t_high.txt -n _ttH_hbb_13TeV_sl_4j4t_high >&! out_Asymptotic_ttH_hbb_13TeV_sl_4j4t_high.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_4j4t_low.txt -n _ttH_hbb_13TeV_sl_4j4t_low >&! out_Asymptotic_ttH_hbb_13TeV_sl_4j4t_low.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_5j3t.txt -n _ttH_hbb_13TeV_sl_5j3t >&! out_Asymptotic_ttH_hbb_13TeV_sl_5j3t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_5jge4t_high.txt -n _ttH_hbb_13TeV_sl_5jge4t_high >&! out_Asymptotic_ttH_hbb_13TeV_sl_5jge4t_high.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_5jge4t_low.txt -n _ttH_hbb_13TeV_sl_5jge4t_low >&! out_Asymptotic_ttH_hbb_13TeV_sl_5jge4t_low.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_boost.txt -n _ttH_hbb_13TeV_sl_boost >&! out_Asymptotic_ttH_hbb_13TeV_sl_boost.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_ge6j2t.txt -n _ttH_hbb_13TeV_sl_ge6j2t >&! out_Asymptotic_ttH_hbb_13TeV_sl_ge6j2t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_ge6j3t.txt -n _ttH_hbb_13TeV_sl_ge6j3t >&! out_Asymptotic_ttH_hbb_13TeV_sl_ge6j3t.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_ge6jge4t_high.txt -n _ttH_hbb_13TeV_sl_ge6jge4t_high >&! out_Asymptotic_ttH_hbb_13TeV_sl_ge6jge4t_high.txt.log & 
+combine -M Asymptotic --minosAlgo stepping -m 125 ttH_hbb_13TeV_sl_ge6jge4t_low.txt -n _ttH_hbb_13TeV_sl_ge6jge4t_low >&! out_Asymptotic_ttH_hbb_13TeV_sl_ge6jge4t_low.txt.log & 
+
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_noMCstats.root mlfit_ttH_hbb_13TeV_noMCstats.root >&! out_diffNuisances_mlfit_ttH_hbb_13TeV_noMCstats.log &
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV.root mlfit_ttH_hbb_13TeV.root >&! out_diffNuisances_mlfit_ttH_hbb_13TeV.log &
+
+
+######################################################
+
+7) Unblind best-fit value of ttH signal strength
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV.txt -n _ttH_hbb_13TeV_robustFit1_minimizerTolerance0p01 --robustFit=1 --minimizerTolerance=0.01 > & ! out_MaxLikelihoodFit_ttH_hbb_13TeV_robustFit1_minimizerTolerance0p01.log &
+
+text2workspace.py ttH_hbb_13TeV.txt -o ws_ttH_hbb_13TeV.root &
+combine -M MaxLikelihoodFit -m 125 --rMin -6 --rMax 6 --minos all ws_ttH_hbb_13TeV.root -n _ttH_hbb_13TeV > & ! out_MaxLikelihoodFit_ttH_hbb_13TeV.log &
+
+
+combine -M MaxLikelihoodFit -m 125 --rMin -6 --rMax 6 --minos all ttH_hbb_13TeV.txt -n _ttH_hbb_13TeV > & ! out_MaxLikelihoodFit_ttH_hbb_13TeV.log &
+REDACTED
+
+
+############
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV.root -m 125 --doInitialFit --robustFit 1 --rMin -6 --rMax 6
+REDACTED
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV.root -m 125 --robustFit 1 --doFits --rMin -6 --rMax 6 --parallel 5
+
+ --- MultiDimFit ---
+REDACTED
+
+>> combine -M MultiDimFit -n _paramFit_Test_CMS_ttH_CSVCErr1 --algo impact --redefineSignalPOIs r -P CMS_ttH_CSVCErr1 --floatOtherPOIs 1 --saveInactivePOI 1 --robustFit 1 --rMin -6 --rMax 6 -m 125 -d ws_ttH_hbb_13TeV.root
+
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV.root -m 125 --rMin -6 --rMax 6 -o impacts_ws_ttH_hbb_13TeV.json
+
+plotImpacts.py -i impacts_ws_ttH_hbb_13TeV.json -o impacts_ttH_hbb_13TeV
+
+
+############
+text2workspace.py ttH_hbb_13TeV_noMCstats.txt -o ws_ttH_hbb_13TeV_noMCstats.root &
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV_noMCstats.root -m 125 --doInitialFit --robustFit 1 --rMin -6 --rMax 6
+REDACTED
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV_noMCstats.root -m 125 --robustFit 1 --doFits --rMin -6 --rMax 6 --parallel 5
+
+ --- MultiDimFit ---
+REDACTED
+
+combineTool.py -M Impacts -d ws_ttH_hbb_13TeV_noMCstats.root -m 125 --rMin -6 --rMax 6 -o impacts_ws_ttH_hbb_13TeV_noMCstats.json
+
+plotImpacts.py -i impacts_ws_ttH_hbb_13TeV_noMCstats.json -o impacts_ttH_hbb_13TeV_noMCstats
+
+########
+
+
+combine -M MaxLikelihoodFit -m 125 --rMin -10 --rMax 10 --minos all ttH_hbb_13TeV_noMCstats.txt -n _ttH_hbb_13TeV_noMCstats > & ! out_MaxLikelihoodFit_ttH_hbb_13TeV_noMCstats.log &
+REDACTED
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_sl_noMCstats.root mlfit_ttH_hbb_13TeV_sl_noMCstats.root >&! out_diffNuisances_mlfit_ttH_hbb_13TeV_sl_noMCstats.log &
+name                                              b-only fit            s+b fit         rho
+REDACTED
+
+
+python ${CMSSW_BASE}/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py -a --vtol 999 --stol 999 --vtol2 999 --stol2 999 --format text -g hist_diffNuisances_ttH_hbb_13TeV_dl.root mlfit_ttH_hbb_13TeV_dl.root >&! out_diffNuisances_mlfit_ttH_hbb_13TeV_dl.log &
+REDACTED
+
+
+#end
