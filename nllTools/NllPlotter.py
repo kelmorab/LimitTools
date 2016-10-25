@@ -10,21 +10,13 @@ datacards=sys.argv[1]
 
 params=sys.argv[2:]
 
-params2=['r', 'CMS_res_j', 'CMS_scale_j', 'CMS_ttH_CSVCErr1', 'CMS_ttH_CSVCErr2', 'CMS_ttH_CSVHF', 'CMS_ttH_CSVHFStats1', 'CMS_ttH_CSVHFStats2', 'CMS_ttH_CSVLF', 'CMS_ttH_CSVLFStats1', 'CMS_ttH_CSVLFStats2', 'CMS_ttH_PSscale_ttbarOther', 'CMS_ttH_PSscale_ttbarPlus2B', 'CMS_ttH_PSscale_ttbarPlusB', 'CMS_ttH_PSscale_ttbarPlusBBbar', 'CMS_ttH_PSscale_ttbarPlusCCbar', 'CMS_ttH_PU', 'CMS_ttH_Q2scale_ttbarOther', 'CMS_ttH_Q2scale_ttbarPlus2B', 'CMS_ttH_Q2scale_ttbarPlusB', 'CMS_ttH_Q2scale_ttbarPlusBBbar', 'CMS_ttH_Q2scale_ttbarPlusCCbar', 'CMS_ttH_QCDscale_ttbarPlus2B', 'CMS_ttH_QCDscale_ttbarPlusB', 'CMS_ttH_QCDscale_ttbarPlusBBbar', 'CMS_ttH_QCDscale_ttbarPlusCCbar', 
-	 #'CMS_ttH_dl_Trig',
-	 'CMS_ttH_eff_lepton',
-	 #'CMS_ttH_ljets_Trig', 
-	 'QCDscale_V', 'QCDscale_VV', 'QCDscale_singlet', 'QCDscale_ttH', 'QCDscale_ttbar', 'lumi_13TeV', 'pdf_gg', 'pdf_gg_ttH', 'pdf_qg', 'pdf_qqbar']
+params2=['r']+['CMS_res_j', 'CMS_scale_j', 'CMS_ttH_CSVCErr1', 'CMS_ttH_CSVCErr2', 'CMS_ttH_CSVHF', 'CMS_ttH_CSVHFStats1', 'CMS_ttH_CSVHFStats2', 'CMS_ttH_CSVLF', 'CMS_ttH_CSVLFStats1', 'CMS_ttH_CSVLFStats2', 'CMS_ttH_PSscale_ttbarOther', 'CMS_ttH_PSscale_ttbarPlus2B', 'CMS_ttH_PSscale_ttbarPlusB', 'CMS_ttH_PSscale_ttbarPlusBBbar', 'CMS_ttH_PSscale_ttbarPlusCCbar', 'CMS_ttH_PU', 'CMS_ttH_Q2scale_ttbarOther', 'CMS_ttH_Q2scale_ttbarPlus2B', 'CMS_ttH_Q2scale_ttbarPlusB', 'CMS_ttH_Q2scale_ttbarPlusBBbar', 'CMS_ttH_Q2scale_ttbarPlusCCbar', 'CMS_ttH_QCDscale_ttbarPlus2B', 'CMS_ttH_QCDscale_ttbarPlusB', 'CMS_ttH_QCDscale_ttbarPlusBBbar', 'CMS_ttH_QCDscale_ttbarPlusCCbar',
+	       #'CMS_ttH_dl_Trig', 'CMS_ttH_dl_eff_lepton', 
+	       'CMS_ttH_eff_el', 'CMS_ttH_eff_mu', 'CMS_ttH_ljets_Trig_el', 'CMS_ttH_ljets_Trig_mu', 
+	       'QCDscale_V', 'QCDscale_VV', 'QCDscale_singlet', 'QCDscale_ttH', 'QCDscale_ttbar', 'lumi_13TeV', 'pdf_gg', 'pdf_gg_ttH', 'pdf_qg', 'pdf_qqbar']
 
-if "dilepton" in datacards:
-  params2+=['CMS_ttH_dl_Trig']
-elif "singlelepton" in datacards:
-  params2+=['CMS_ttH_ljets_Trig']
-else:
-  params2+=['CMS_ttH_ljets_Trig', 'CMS_ttH_dl_Trig']
 
-floatmode="--floatOtherPOI=1"
-floatR=True
+
 doFullCorrelations=True
 
 counter=0
@@ -33,28 +25,28 @@ globalBestR=0.0
 globalBestRNLL=9999.0
 
 if params[0]!="r":
-  print "r should be first for full functionality"
+  print "r should really be first for full functionality"
 
 for p in params:
   counter+=1
   if p=="r":
-    if "dilepton" in datacards:
-      minpoi=-8
-      maxpoi=5
-      minr=-8
-      maxr=5
+    if "dl" in datacards:
+      minpoi=-10
+      maxpoi=10
+      minr=-10
+      maxr=10
     else:
       minpoi=-5
       maxpoi=5
       minr=-5
       maxr=5
   else:
-    minpoi=-2.5
-    maxpoi=2.5
+    minpoi=-5
+    maxpoi=5
     minr=-5
     maxr=5
   
-  npoints=60
+  npoints=10
 
   stringOfOtherNuis=""
   listOfOtherNuis=[]
@@ -69,17 +61,8 @@ for p in params:
   print stringOfOtherNuis
   
   pp=p.replace(" ","")
-  #cmd="combine -M MultiDimFit --algo=grid --points=10 --rMin -5 --rMax 5 "+floatmode+" -P "+pp+" ttH_hbb_13TeV_sl_noMC.txt -n _nllScan_"+pp
-  #print cmd
-  #if floatR:
-    #call(["combine","-M","MultiDimFit","--algo=grid","-m","125","--points="+str(npoints),floatmode,"-P",pp,"--redefineSignalPOIs",pp,"--setPhysicsModelParameterRanges",pp+"="+str(minr)+","+str(maxr),"--saveInactivePOI","1","--saveSpecifiedNuis",stringOfOtherNuis,datacards])
-    ##call(["combine","-M","MultiDimFit","--algo=grid","--points="+str(npoints),floatmode,"-P",pp,"--redefineSignalPOIs",pp,"--setPhysicsModelParameterRanges",pp+"="+str(minr)+","+str(maxr),"--saveInactivePOI","--saveSpecifiedNuis",stringOfOtherNuis,datacards])
-
-  #else:
-    #print "currently not supported"
-    ##call(["combine","-M","MultiDimFit","--algo=grid","--points=100",floatmode,"-P",pp,"--redefineSignalPOIs","r,"+pp,"--setPhysicsModelParameterRanges","r=-"+str(minr)*","+str(maxr)+":"+pp+"=-5,5" ,datacards])
   
-  outfilename=pp+"_higgsCombineTest.MultiDimFit.mH120.root"
+  outfilename="nllscans/"+pp+"_higgsCombineTest.MultiDimFit.mH120.root"
   print outfilename
   ff=ROOT.TFile(outfilename,"READ")
   t=ff.Get("limit")
@@ -140,11 +123,11 @@ for p in params:
   #c.SetLogy()
   c.SetGridy()
   if counter==1:
-    c.SaveAs("scans_nll.pdf[")
-  c.SaveAs("scans_nll.pdf")
-  c.SaveAs(""+pp+"_nll.png")
-  c.SaveAs(""+pp+"_nll.pdf")
-  h.SaveAs(""+pp+"_nll.root")
+    c.SaveAs("nllscans/"+"scans_nll.pdf[")
+  c.SaveAs("nllscans/"+"scans_nll.pdf")
+  c.SaveAs("nllscans/"+""+pp+"_nll.png")
+  c.SaveAs("nllscans/"+""+pp+"_nll.pdf")
+  h.SaveAs("nllscans/"+""+pp+"_nll.root")
   
   for op in listOfOtherNuis:
     thisminval=t.GetMinimum(op)-0.1
@@ -164,8 +147,8 @@ for p in params:
     #raw_input()
     #c.SetLogy()
     ccorr.SetGridy()
-    ccorr.SaveAs("scans_nll.pdf")
-    ccorr.SaveAs("h"+op+"_vs_"+pp+".png")
+    ccorr.SaveAs("nllscans/"+"scans_nll.pdf")
+    ccorr.SaveAs("nllscans/"+"h"+op+"_vs_"+pp+".png")
   
   
   if pp=="r" and doFullCorrelations:
@@ -212,28 +195,14 @@ for p in params:
 	    #print "y"
 	    bestYMarker.Draw()
 	  #raw_input()
-	  cfc.SaveAs("scans_nll.pdf")
+	  cfc.SaveAs("nllscans/"+"scans_nll.pdf")
     
   if counter==len(params):
-    c.SaveAs("scans_nll.pdf]")
-  #if floatR==False:
-    #h=ROOT.TH2D("h","h",100,-6,6,100,minvalnll,maxvalnll)
-    #t.Project("h","2*deltaNLL:r","","COLZ")
-    #c=ROOT.TCanvas("c","c",1024,768)
-    #h.Draw("COLZ")
-    ##raw_input()
-    #c.SaveAs(""+pp+"_r_nll.png")
-    #c.SaveAs(""+pp+"_r_nll.pdf")
+    c.SaveAs("nllscans/"+"scans_nll.pdf]")
+
   
   ff.Close()
-  
-  #resfilename=""+pp+"_"+outfilename
-  #call(["cp",outfilename, resfilename])
-  
-  
-  
-  
-  
+
   
   
   
