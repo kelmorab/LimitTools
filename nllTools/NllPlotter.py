@@ -5,48 +5,52 @@ from array import array
 ROOT.gROOT.SetBatch(True)
 ROOT.gDirectory.cd('PyROOT:/')
 
-
-datacards=sys.argv[1]
-
-params=sys.argv[2:]
-
-params2=['r']+['CMS_res_j', 'CMS_scale_j', 'CMS_ttH_CSVCErr1', 'CMS_ttH_CSVCErr2', 'CMS_ttH_CSVHF', 'CMS_ttH_CSVHFStats1', 'CMS_ttH_CSVHFStats2', 'CMS_ttH_CSVLF', 'CMS_ttH_CSVLFStats1', 'CMS_ttH_CSVLFStats2', 'CMS_ttH_PSscale_ttbarOther', 'CMS_ttH_PSscale_ttbarPlus2B', 'CMS_ttH_PSscale_ttbarPlusB', 'CMS_ttH_PSscale_ttbarPlusBBbar', 'CMS_ttH_PSscale_ttbarPlusCCbar', 'CMS_ttH_PU', 'CMS_ttH_Q2scale_ttbarOther', 'CMS_ttH_Q2scale_ttbarPlus2B', 'CMS_ttH_Q2scale_ttbarPlusB', 'CMS_ttH_Q2scale_ttbarPlusBBbar', 'CMS_ttH_Q2scale_ttbarPlusCCbar', 'CMS_ttH_QCDscale_ttbarPlus2B', 'CMS_ttH_QCDscale_ttbarPlusB', 'CMS_ttH_QCDscale_ttbarPlusBBbar', 'CMS_ttH_QCDscale_ttbarPlusCCbar',
-	       #'CMS_ttH_dl_Trig', 'CMS_ttH_dl_eff_lepton', 
-	       'CMS_ttH_eff_el', 'CMS_ttH_eff_mu', 'CMS_ttH_ljets_Trig_el', 'CMS_ttH_ljets_Trig_mu', 
-	       'QCDscale_V', 'QCDscale_VV', 'QCDscale_singlet', 'QCDscale_ttH', 'QCDscale_ttbar', 'lumi_13TeV', 'pdf_gg', 'pdf_gg_ttH', 'pdf_qg', 'pdf_qqbar']
+if len(sys.argv)<2 or sys.argv[1]=="-h" or sys.argv[1]=="--help":
+  print "python NllPlotter.py [WithCorr|AnyOtherString] outputDir workspace paramsToPlot"
 
 
+DoCorrelationString=sys.argv[1]
+outputDir=sys.argv[2]
+datacards=sys.argv[3]
 
-doFullCorrelations=True
+params=sys.argv[4:]
+
+print "reading workspace for nuisances"
+VetoBBB=True
+
+params2=[]
+# find all nuisances
+workspacefile=ROOT.TFile(datacards,"READ")
+workspace=workspacefile.Get("w")
+setOfNuisances=workspace.set("nuisances")
+listOfNuisances=setOfNuisances.contentsString().split(",")
+for nuis in listOfNuisances:
+  if "BDTbin" in nuis and VetoBBB:
+    continue
+  params2.append(nuis)
+workspacefile.Close()
+
+print "found Nuisances"
+print params2 
+
+
+doFullCorrelations=False
+if DoCorrelationString=="WithCorr":
+  doFullCorrelations=True
 
 counter=0
 
 globalBestR=0.0
 globalBestRNLL=9999.0
+BinningFactor=10 
 
 if params[0]!="r":
   print "r should really be first for full functionality"
 
 for p in params:
   counter+=1
-  if p=="r":
-    if "dl" in datacards:
-      minpoi=-10
-      maxpoi=10
-      minr=-10
-      maxr=10
-    else:
-      minpoi=-5
-      maxpoi=5
-      minr=-5
-      maxr=5
-  else:
-    minpoi=-5
-    maxpoi=5
-    minr=-5
-    maxr=5
-  
-  npoints=10
+
+  #npoints=10
 
   stringOfOtherNuis=""
   listOfOtherNuis=[]
@@ -62,10 +66,11 @@ for p in params:
   
   pp=p.replace(" ","")
   
-  outfilename="nllscans/"+pp+"_higgsCombineTest.MultiDimFit.mH120.root"
+  outfilename=outputDir+"/"+pp+"_higgsCombineTest.MultiDimFit.mH120.root"
   print outfilename
   ff=ROOT.TFile(outfilename,"READ")
   t=ff.Get("limit")
+  npoints=t.GetEntries()
   #minvalnll=2.1*t.GetMinimum("deltaNLL")
   minvalnll=-0.5
   maxvalnll=2.1*min(t.GetMaximum("deltaNLL"),100)
@@ -106,11 +111,12 @@ for p in params:
 	thisValueAtGlobalBestR=xarray[0]
     print pp, " = ", thisValueAtGlobalBestR,  " at r, closest one ", globalBestR, bufferbestR
     
-    
+  minpoi=t.GetMinimum(pp)
+  maxpoi=t.GetMaximum(pp)
   markerline=ROOT.TLine(thisValueAtGlobalBestR,minvalnll,thisValueAtGlobalBestR,maxvalnll)
   markerline.SetLineColor(ROOT.kRed)
   
-  h=ROOT.TH2D("h"+pp,"h"+pp,npoints*4,minpoi-0.5,maxpoi+0.5,npoints*4,minvalnll,maxvalnll)
+  h=ROOT.TH2D("h"+pp,"h"+pp,npoints*BinningFactor,minpoi-0.5,maxpoi+0.5,npoints*BinningFactor,minvalnll,maxvalnll)
   t.Project("h"+pp,"2*deltaNLL:"+pp,"","COLZ")
   c=ROOT.TCanvas("c","c",1024,768)
   h.GetXaxis().SetTitle(pp)
@@ -123,20 +129,21 @@ for p in params:
   #c.SetLogy()
   c.SetGridy()
   if counter==1:
-    c.SaveAs("nllscans/"+"scans_nll.pdf[")
-  c.SaveAs("nllscans/"+"scans_nll.pdf")
-  c.SaveAs("nllscans/"+""+pp+"_nll.png")
-  c.SaveAs("nllscans/"+""+pp+"_nll.pdf")
-  h.SaveAs("nllscans/"+""+pp+"_nll.root")
+    c.SaveAs(outputDir+"/"+"scans_nll.pdf[")
+  c.SaveAs(outputDir+"/"+"scans_nll.pdf")
+  c.SaveAs(outputDir+"/"+""+pp+"_nll.png")
+  c.SaveAs(outputDir+"/"+""+pp+"_nll.pdf")
+  h.SaveAs(outputDir+"/"+""+pp+"_nll.root")
   
   for op in listOfOtherNuis:
     thisminval=t.GetMinimum(op)-0.1
     thismaxval=t.GetMaximum(op)+0.1
+    print op, thisminval, thismaxval
     
     markerline=ROOT.TLine(thisValueAtGlobalBestR,thisminval,thisValueAtGlobalBestR,thismaxval)
     markerline.SetLineColor(ROOT.kRed)
     
-    hcorr=ROOT.TH2D("h"+op+"_vs_"+pp,"h"+op+"_vs_"+pp,npoints*4,minpoi-0.5,maxpoi+0.5,npoints*4,thisminval,thismaxval)
+    hcorr=ROOT.TH2D("h"+op+"_vs_"+pp,"h"+op+"_vs_"+pp,npoints*BinningFactor,minpoi-0.5,maxpoi+0.5,npoints*BinningFactor,thisminval,thismaxval)
     t.Project("h"+op+"_vs_"+pp,op+":"+pp,"","COLZ")
     ccorr=ROOT.TCanvas("ccorr","ccorr",1024,768)
     hcorr.GetXaxis().SetTitle(pp)
@@ -147,8 +154,8 @@ for p in params:
     #raw_input()
     #c.SetLogy()
     ccorr.SetGridy()
-    ccorr.SaveAs("nllscans/"+"scans_nll.pdf")
-    ccorr.SaveAs("nllscans/"+"h"+op+"_vs_"+pp+".png")
+    ccorr.SaveAs(outputDir+"/"+"scans_nll.pdf")
+    ccorr.SaveAs(outputDir+"/"+"h"+op+"_vs_"+pp+".png")
   
   
   if pp=="r" and doFullCorrelations:
@@ -195,10 +202,10 @@ for p in params:
 	    #print "y"
 	    bestYMarker.Draw()
 	  #raw_input()
-	  cfc.SaveAs("nllscans/"+"scans_nll.pdf")
+	  cfc.SaveAs(outputDir+"/"+"scans_nll.pdf")
     
   if counter==len(params):
-    c.SaveAs("nllscans/"+"scans_nll.pdf]")
+    c.SaveAs(outputDir+"/"+"scans_nll.pdf]")
 
   
   ff.Close()
