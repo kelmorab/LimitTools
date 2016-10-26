@@ -8,7 +8,7 @@ ROOT.gROOT.SetBatch(True)
 VetoBBB=True
 #print len(sys.argv)
 if len(sys.argv)<=2 or sys.argv[1]=="-h" or sys.argv[1]=="--help":
-  print "python nllScanner.py [bAsimov|sPlusbAsimov|data] nPoints outputDir workspace paramsToScan"
+  print "python nllScanner.py [bAsimov|sPlusbAsimov|dataSB|dataB] nPoints outputDir workspace paramsToScan"
   exit(0)
   
 fitMode=sys.argv[1]
@@ -49,9 +49,15 @@ doBonlyAsimov=True
 
 counter=0
 params=[]
-if inputparams[0]!="r":
-  params+=["r"]
-params+=inputparams
+#if inputparams[0]!="r":
+params=["r"]
+
+for par in inputparams:
+  if par !="r" and par in params2:
+    params.append(par)
+  else:
+    print "skipping "+par+" for this datacard"
+#params+=inputparams
 print params 
 
 minpoi=-5
@@ -89,7 +95,7 @@ for p in params:
     elif fitMode=="sPlusbAsimov":
       print "doing asimov SplusB"
       fitstring+=" -t -1 --expectSignal 1 "
-    elif fitMode=="data":
+    elif fitMode=="dataB" or fitMode=="dataSB":
       print "doing fit to data"
       fitstring+=""
     else:
@@ -108,8 +114,8 @@ for p in params:
       
     prefitoutput=check_output(cmd,shell=True)
     preBest=0
-    preMin=-5
-    preMax=5
+    preMin=-20
+    preMax=20
     for line in prefitoutput.split("\n"):
       if "Best fit" in line:
 	print line
@@ -138,8 +144,17 @@ for p in params:
     # do actual fits
     cmd="combine -M MultiDimFit"
     cmd+=fitstring
-    cmd+=" --algo=grid --points="+str(npoints)+ " --minimizerStrategy 0 --minimizerTolerance 0.0001 --floatOtherPOI 1 --redefineSignalPOIs r -P "+pp+" --setPhysicsModelParameterRanges "+pp+"="+str(minpoi)+","+str(maxpoi)+" --rMin="+str(minr)+" --rMax="+str(maxr)+" --saveInactivePOI 1 --saveSpecifiedNuis "+stringOfOtherNuis+" "+datacards
-    
+    if p=="r":
+      cmd+=" --algo=grid --points="+str(npoints)+ " --minimizerStrategy 0 --minimizerTolerance 0.0001 --rMin="+str(minr)+" --rMax="+str(maxr)+" --saveInactivePOI 1 --saveSpecifiedNuis "+stringOfOtherNuis+" "+datacards
+    else:
+      if fitMode=="dataSB":
+        cmd+=" --algo=grid --points="+str(npoints)+ " --minimizerStrategy 0 --minimizerTolerance 0.0001 --floatOtherPOI 1 --redefineSignalPOIs r -P "+pp+" --setPhysicsModelParameterRanges "+pp+"="+str(minpoi)+","+str(maxpoi)+" --rMin="+str(minr)+" --rMax="+str(maxr)+" --saveInactivePOI 1 --saveSpecifiedNuis "+stringOfOtherNuis+" "+datacards
+      elif fitMode=="dataB":
+	cmd+=" --algo=grid --points="+str(npoints)+ " --minimizerStrategy 0 --minimizerTolerance 0.0001 --floatOtherPOI 0 -P "+pp+" --setPhysicsModelParameterRanges "+pp+"="+str(minpoi)+","+str(maxpoi)+" --rMin="+str(minr)+" --rMax="+str(maxr)+" --setPhysicsModelParameters r=0 --saveInactivePOI 1 --saveSpecifiedNuis "+stringOfOtherNuis+" "+datacards
+      else:
+	cmd+=" --algo=grid --points="+str(npoints)+ " --minimizerStrategy 0 --minimizerTolerance 0.0001 --floatOtherPOI 1 --redefineSignalPOIs r -P "+pp+" --setPhysicsModelParameterRanges "+pp+"="+str(minpoi)+","+str(maxpoi)+" --rMin="+str(minr)+" --rMax="+str(maxr)+" --saveInactivePOI 1 --saveSpecifiedNuis "+stringOfOtherNuis+" "+datacards
+	
+    print cmd
     call(cmd,shell=True)
 
     #call(["combine","-M","MultiDimFit","--algo=grid","--points="+str(npoints),"--floatOtherPOI","1","--redefineSignalPOIs","r","-P",pp,"--setPhysicsModelParameterRanges",pp+"="+str(minpoi)+","+str(maxpoi),"--rMin",str(minr),"--rMax",str(maxr),"--saveInactivePOI","1","--saveSpecifiedNuis",stringOfOtherNuis,datacards])

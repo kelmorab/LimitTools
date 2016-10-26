@@ -6,14 +6,22 @@ ROOT.gROOT.SetBatch(True)
 ROOT.gDirectory.cd('PyROOT:/')
 
 if len(sys.argv)<=2 or sys.argv[1]=="-h" or sys.argv[1]=="--help":
-  print "python NllPlotter.py [WithCorr|AnyOtherString] outputDir workspace paramsToPlot"
+  print "python NllPlotter.py [WithCorr|AnyOtherString] [blind|unblind] outputDir workspace paramsToPlot"
   exit(0)
 
-DoCorrelationString=sys.argv[1]
-outputDir=sys.argv[2]
-datacards=sys.argv[3]
+blind=True
 
-params=sys.argv[4:]
+DoCorrelationString=sys.argv[1]
+blindstring=sys.argv[2]
+if blindstring=="unblind":
+  blind=False
+  
+outputDir=sys.argv[3]
+datacards=sys.argv[4]
+inputparams=sys.argv[5:]
+
+
+
 
 print "reading workspace for nuisances"
 VetoBBB=True
@@ -32,6 +40,15 @@ workspacefile.Close()
 print "found Nuisances"
 print params2 
 
+params=["r"]
+
+for par in inputparams:
+  if par !="r" and par in params2:
+    params.append(par)
+  else:
+    print "skipping "+par+" for this datacard"
+#params+=inputparams
+print params 
 
 doFullCorrelations=False
 if DoCorrelationString=="WithCorr":
@@ -61,7 +78,7 @@ for p in params:
     else:
       listOfOtherNuis.append(op)
   stringOfOtherNuis=",".join(listOfOtherNuis)
-  print stringOfOtherNuis
+  #print stringOfOtherNuis
   
   pp=p.replace(" ","")
   
@@ -71,8 +88,8 @@ for p in params:
   t=ff.Get("limit")
   npoints=t.GetEntries()
   #minvalnll=2.1*t.GetMinimum("deltaNLL")
-  minvalnll=-0.5
-  maxvalnll=2.1*min(t.GetMaximum("deltaNLL"),100)
+  minvalnll=-10
+  maxvalnll=2.1*min(t.GetMaximum("deltaNLL"),40)
   #if pp=="r":
     #maxvalnll=10
     #print "DL r override"
@@ -81,7 +98,7 @@ for p in params:
   rarray=array("f",[0.0])
   varray=array("f",[0.0])
   
-  ievtWithGlobalBestR=0
+  ievtWithGlobalBestR=-1
 
   if pp=="r":
     t.SetBranchAddress(pp,rarray)
@@ -93,7 +110,8 @@ for p in params:
 	globalBestR=rarray[0]
 	ievtWithGlobalBestR=ievt
     print "best fit r ", globalBestR, " at ", globalBestRNLL, ievtWithGlobalBestR
-    thisValueAtGlobalBestR=globalBestR
+    if ievtWithGlobalBestR>=0:
+      thisValueAtGlobalBestR=globalBestR
 
   else:
     thisValueAtGlobalBestR=0.0
@@ -103,7 +121,7 @@ for p in params:
     bufferbestR=999.0
     for ievt in range(t.GetEntries()):
       t.GetEntry(ievt)
-      print varray[0]
+      #print varray[0]
       if abs(varray[0]-globalBestR)<deltaBestVal:
 	deltaBestVal=abs(varray[0]-globalBestR)
 	bufferbestR=varray[0]
@@ -122,17 +140,21 @@ for p in params:
   h.GetYaxis().SetTitle("2*deltaNLL")
   
   h.Draw("COLZ")
-  markerline.Draw()
+  if not blind:
+    markerline.Draw()
   
   #raw_input()
   #c.SetLogy()
   c.SetGridy()
   if counter==1:
     c.SaveAs(outputDir+"/"+"scans_nll.pdf[")
-  c.SaveAs(outputDir+"/"+"scans_nll.pdf")
-  c.SaveAs(outputDir+"/"+""+pp+"_nll.png")
-  c.SaveAs(outputDir+"/"+""+pp+"_nll.pdf")
-  h.SaveAs(outputDir+"/"+""+pp+"_nll.root")
+  if not (pp=="r" and blind):    
+    c.SaveAs(outputDir+"/"+"scans_nll.pdf")
+    #c.SaveAs(outputDir+"/"+""+pp+"_nll.png")
+    c.SaveAs(outputDir+"/"+""+pp+"_nll.pdf")
+  else:
+    print "skipping blinded r"
+  #h.SaveAs(outputDir+"/"+""+pp+"_nll.root")
   
   for op in listOfOtherNuis:
     thisminval=t.GetMinimum(op)-0.1
@@ -149,12 +171,13 @@ for p in params:
     hcorr.GetYaxis().SetTitle(op)
     
     hcorr.Draw("COLZ")
-    markerline.Draw()
+    if not blind:
+      markerline.Draw()
     #raw_input()
     #c.SetLogy()
     ccorr.SetGridy()
     ccorr.SaveAs(outputDir+"/"+"scans_nll.pdf")
-    ccorr.SaveAs(outputDir+"/"+"h"+op+"_vs_"+pp+".png")
+    #ccorr.SaveAs(outputDir+"/"+"h"+op+"_vs_"+pp+".png")
   
   
   if pp=="r" and doFullCorrelations:
@@ -194,13 +217,14 @@ for p in params:
 	  cfc=ROOT.TCanvas("c"+listOfArrays[ni][0]+"_vs_"+listOfArrays[nj][0]+"_atBestR","c"+listOfArrays[ni][0]+"_vs_"+listOfArrays[nj][0]+"_atBestR",1024,768)
 	  print listOfCorrelationHistos[-1].GetEntries()
 	  listOfCorrelationHistos[-1].Draw("COLZ")
-	  if bestXMarker!=None:
-	    #print "x"
-	    bestXMarker.Draw()
-	  if bestYMarker!=None:
-	    #print "y"
-	    bestYMarker.Draw()
-	  #raw_input()
+	  if not blind:
+	    if bestXMarker!=None:
+	      #print "x"
+	      bestXMarker.Draw()
+	    if bestYMarker!=None:
+	      #print "y"
+	      bestYMarker.Draw()
+	    #raw_input()
 	  cfc.SaveAs(outputDir+"/"+"scans_nll.pdf")
     
   if counter==len(params):
