@@ -5,9 +5,9 @@ from array import array
 ROOT.gROOT.SetBatch(True)
 ROOT.gDirectory.cd('PyROOT:/')
 
-if len(sys.argv)<2 or sys.argv[1]=="-h" or sys.argv[1]=="--help":
+if len(sys.argv)<=2 or sys.argv[1]=="-h" or sys.argv[1]=="--help":
   print "python NllPlotter.py [WithCorr|AnyOtherString] outputDir workspace paramsToPlot"
-
+  exit(0)
 
 DoCorrelationString=sys.argv[1]
 outputDir=sys.argv[2]
@@ -17,7 +17,6 @@ params=sys.argv[4:]
 
 print "reading workspace for nuisances"
 VetoBBB=True
-
 params2=[]
 # find all nuisances
 workspacefile=ROOT.TFile(datacards,"READ")

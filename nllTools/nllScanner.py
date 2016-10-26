@@ -6,10 +6,11 @@ from subprocess import call, check_output
 ROOT.gROOT.SetBatch(True)
 
 VetoBBB=True
-
-if len(sys.argv)<2 or sys.argv[1]=="-h" or sys.argv[1]=="--help":
+#print len(sys.argv)
+if len(sys.argv)<=2 or sys.argv[1]=="-h" or sys.argv[1]=="--help":
   print "python nllScanner.py [bAsimov|sPlusbAsimov|data] nPoints outputDir workspace paramsToScan"
-
+  exit(0)
+  
 fitMode=sys.argv[1]
 npointsString=sys.argv[2]
 npoints=int(npointsString)
