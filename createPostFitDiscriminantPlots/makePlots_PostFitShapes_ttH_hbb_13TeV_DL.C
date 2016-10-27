@@ -143,7 +143,7 @@ void setRatioYRange(TH1* h) {
 }
 
 
-void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH_hbb_13TeV_2016_03_10.root", bool printPDF_ = true, TString dirpostfix_ = "final" ){
+void makePlots_PostFitShapes_ttH_hbb_13TeV_DL( TString inputFile_ = "shapes_ttH_hbb_13TeV_2016_03_10.root", bool printPDF_ = true, TString dirpostfix_ = "final" ){
 
   //TH1::SetDefaultSumw2(); interferes with SetBinErrorOption(kPoisson)!!
 
@@ -162,57 +162,63 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
 //   categories.push_back("sl_gej6t2");
 //   categories.push_back("sl_j4t3");
 //   categories.push_back("sl_j5t3");
-  categories.push_back("sl_jge6_t3_high");
-  categories.push_back("sl_jge6_t3_low");  
-    categories.push_back("sl_j4_t4_high");
-  categories.push_back("sl_j4_t4_low");
-  categories.push_back("sl_j5_tge4_high");
-    categories.push_back("sl_j5_tge4_low");
-  categories.push_back("sl_jge6_tge4_high");
-  categories.push_back("sl_jge6_tge4_low");
+  categories.push_back("dl_3j3t");
+  categories.push_back("dl_ge4j3t_high");  
+    categories.push_back("dl_ge4j3t_low");
+  categories.push_back("dl_ge4jge4t_high");
+  categories.push_back("dl_ge4jge4t_low");
+//     categories.push_back("sl_j5_tge4_low");
+//   categories.push_back("sl_jge6_tge4_high");
+//   categories.push_back("sl_jge6_tge4_low");
 //   categories.push_back("sl_boost");
 
   int Ncategories = int(categories.size());
 
   std::vector<TString> category_names_new;
 //   category_names_new.push_back("dilepton, 3 jets, 2 b-tags");
-//   category_names_new.push_back("dilepton, 3 jets, 3 b-tags");
+  category_names_new.push_back("dilepton, 3 jets, 3 b-tags");
 //   category_names_new.push_back("dilepton, #geq4 jets, 2 b-tags");
-//   category_names_new.push_back("dilepton, #geq4 jets, 3 b-tags");
-//   category_names_new.push_back("dilepton, #geq4 jets, #geq4 b-tags");
+  category_names_new.push_back("dilepton, #geq4 jets, 3 b-tags");
+    category_names_new.push_back("dilepton, #geq4 jets, 3 b-tags");
+
+  category_names_new.push_back("dilepton, #geq4 jets, #geq4 b-tags");
+  category_names_new.push_back("dilepton, #geq4 jets, #geq4 b-tags");
 
 //   category_names_new.push_back("1 lepton, #geq6 jets, 2 b-tags");
 //   category_names_new.push_back("1 lepton, 4 jets, 3 b-tags");
 //   category_names_new.push_back("1 lepton, 5 jets, 3 b-tags");
-  category_names_new.push_back("1 lepton, #geq6 jets, 3 b-tags");
-  category_names_new.push_back("1 lepton, #geq6 jets, 3 b-tags");
-  category_names_new.push_back("1 lepton, 4 jets, 4 b-tags");
-  category_names_new.push_back("1 lepton, 4 jets, 4 b-tags");
-  category_names_new.push_back("1 lepton, 5 jets, #geq4 b-tags");
-  category_names_new.push_back("1 lepton, 5 jets, #geq4 b-tags");
-  category_names_new.push_back("1 lepton, #geq6 jets, #geq4 b-tags");
-  category_names_new.push_back("1 lepton, #geq6 jets, #geq4 b-tags");
+//   category_names_new.push_back("1 lepton, #geq6 jets, 3 b-tags");
+//   category_names_new.push_back("1 lepton, #geq6 jets, 3 b-tags");
+//   category_names_new.push_back("1 lepton, 4 jets, 4 b-tags");
+//   category_names_new.push_back("1 lepton, 4 jets, 4 b-tags");
+//   category_names_new.push_back("1 lepton, 5 jets, #geq4 b-tags");
+//   category_names_new.push_back("1 lepton, 5 jets, #geq4 b-tags");
+//   category_names_new.push_back("1 lepton, #geq6 jets, #geq4 b-tags");
+//   category_names_new.push_back("1 lepton, #geq6 jets, #geq4 b-tags");
 //   category_names_new.push_back("1 lepton, boosted");
 
 
   std::vector<TString> category_names;
 //   category_names.push_back("DL,3j,2b");
-//   category_names.push_back("DL,3j,3b");
+  category_names.push_back("DL,3j,3b");
 //   category_names.push_back("DL,#geq4j,2b");
-//   category_names.push_back("DL,#geq4j,3b");
-//   category_names.push_back("DL,#geq4j,#geq4b");
+  category_names.push_back("DL,#geq4j,3b,H");
+    category_names.push_back("DL,#geq4j,3b,L");
+
+  category_names.push_back("DL,#geq4j,#geq4b,H");
+  category_names.push_back("DL,#geq4j,#geq4b,L");
 
 //   category_names.push_back("SL,#geq6j,2b");
 //   category_names.push_back("SL,4j,3b");
 //   category_names.push_back("SL,5j,3b");
-  category_names.push_back("SL,#geq6j,3b,H");
-  category_names.push_back("SL,#geq6j,3b,L");
-  category_names.push_back("SL,4j,4b,H");
-  category_names.push_back("SL,4j,4b,L");
-  category_names.push_back("SL,5j,#geq4b,H");
-  category_names.push_back("SL,5j,#geq4b,L");
-  category_names.push_back("SL,#geq6j,#geq4b,H");
-  category_names.push_back("SL,#geq6j,#geq4b,L");
+//   category_names.push_back("SL,#geq6j,3b,H");
+//   category_names.push_back("SL,#geq6j,3b,L");
+//   category_names.push_back("SL,4j,4b,H");
+//   category_names.push_back("SL,4j,4b,L");
+//   category_names.push_back("SL,5j,#geq4b,H");
+//   category_names.push_back("SL,5j,#geq4b,L");
+//   category_names.push_back("SL,#geq6j,#geq4b,H");
+//   category_names.push_back("SL,#geq6j,#geq4b,L");
 //   category_names.push_back("SL,boost");
 
   std::vector<TString> fits;
@@ -277,14 +283,14 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
   color[13]= kBlack;
 
   std::map <TString, TString> optional_argument;
-  optional_argument["SL,#geq6j,3b,H"] = "BDT > 0.12";
-  optional_argument["SL,#geq6j,3b,L"] = "BDT < 0.12";
-  optional_argument["SL,4j,4b,L"] = "BDT < 0.26";
-  optional_argument["SL,4j,4b,H"] = "BDT > 0.26";
-  optional_argument["SL,5j,#geq4b,L"] = "BDT < 0.26";
-  optional_argument["SL,5j,#geq4b,H"] = "BDT > 0.26";
-  optional_argument["SL,#geq6j,#geq4b,L"] = "BDT < 0.13";
-  optional_argument["SL,#geq6j,#geq4b,H"] = "BDT > 0.13";
+  optional_argument["DL,3j,3b"] = "";
+  optional_argument["DL,#geq4j,3b,H"] = "BDT > 0.23";
+  optional_argument["DL,#geq4j,3b,L"] = "BDT < 0.23";
+  optional_argument["DL,#geq4j,#geq4b,H"] = "BDT > 0.23";
+  optional_argument["DL,#geq4j,#geq4b,L"] = "BDT < 0.23";
+//   optional_argument["SL,5j,#geq4b,H"] = "BDT > 0.26";
+//   optional_argument["SL,#geq6j,#geq4b,L"] = "BDT < 0.13";
+//   optional_argument["SL,#geq6j,#geq4b,H"] = "BDT > 0.13";
 
   TString dirprefix = "Images_2016_10_26_ttH_hbb_PostFitShapes" + dirpostfix_ + "/";
 
@@ -707,9 +713,14 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
 	if( categories[iCat].Contains("gej6get4_high") ) myRatio->GetXaxis()->SetTitle("MEM discriminant");
 	if( categories[iCat].Contains("gej6get4_low") ) myRatio->GetXaxis()->SetTitle("MEM discriminant");*/
 	myRatio->GetXaxis()->SetTitle("MEM discriminant");
-      } else {
-	//UPDATE FOR DL 
-	myRatio->GetXaxis()->SetTitle("BDT discriminant");
+      } else if(categories[iCat].BeginsWith("dl_")){
+	//UPDATE FOR DL
+	if (categories[iCat].Contains("dl_3j3t")){
+	  myRatio->GetXaxis()->SetTitle("BDT discriminant");
+	}
+	else{
+	  myRatio->GetXaxis()->SetTitle("MEM discriminant");
+	}
       }
       myRatio_1sig->SetFillStyle(3354);
       myRatio_1sig->SetFillColor(kBlack);
@@ -806,8 +817,8 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
 //     // now fix data errors in inclusive yield plots
 //     // (have been added linearly per BDT bin, but are fully uncorrelated)
 //     // also, use Poisson errors
-    replaceWithCopyWithPoissonErrors(hist_sl_cat[0]);
-//     replaceWithCopyWithPoissonErrors(hist_dl_cat[0]);
+//     replaceWithCopyWithPoissonErrors(hist_sl_cat[0]);
+    replaceWithCopyWithPoissonErrors(hist_dl_cat[0]);
 
 //     std::cout << "\n\n==========2222===========\n";
 //     for(int bin = 1; bin <=     hist_dl_cat[0]->GetNbinsX(); ++bin) {
@@ -819,17 +830,13 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
     double ratioMin = 0.5;
 
 
-    ///////////////////
-    ///
-    /// sl
-    ///
-    ///////////////////
+   
+    
     std::cout<<"here"<<std::endl;
      
     TLegend *legend_sl = new TLegend(0.59,0.65,0.94,0.87);
-
+   
     legend_sl->SetFillColor(kWhite);
-    legend_sl->SetLineColor(kBlack/*kWhite*/);
     legend_sl->SetShadowColor(kWhite);
     legend_sl->SetTextFont(42);
     legend_sl->SetTextSize(0.035);
@@ -1003,13 +1010,12 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
     LumiInfoLatex.Draw();
     CMSInfoLatex.Draw();
     PublishInfoLatex.Draw();
-
-    TLatex prefit_label(0.16,0.82,"pre-fit expectation");
+    
+	TLatex prefit_label(0.16,0.82,"pre-fit expectation");
     prefit_label.SetNDC();
     prefit_label.SetTextFont(42);
     prefit_label.SetTextSize(0.045);
     if( fits[iFit] == "prefit" ) prefit_label.Draw();
-
 
     myC1->cd(2);
     myRatio_sl->SetLineWidth(2);
@@ -1047,7 +1053,6 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
     }
 
 
- /*   
     
     
 
@@ -1262,7 +1267,7 @@ void makePlots_PostFitShapes_ttH_hbb_13TeV_new( TString inputFile_ = "shapes_ttH
     delete myRatio_dl_asymmerr;
     delete myRatio_dl_1sig;
     delete myLine_dl;
-    delete legend_dl;*/
+    delete legend_dl;
 
 
 	
